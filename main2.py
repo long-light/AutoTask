@@ -130,8 +130,6 @@ def ClockIn(user_data):
         ClockIn(user_data,messenger)
 
 if __name__ == '__main__':
-
     for user_data in eval(users_data):
         ClockIn(user_data)
         time.sleep(2)
-

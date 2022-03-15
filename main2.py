@@ -126,6 +126,8 @@ def ClockIn(user_data):
             response = session.post("https://fangkong.hnu.edu.cn/api/v1/clockinlog/add", headers=headers_2,
                                     data=json.dumps(data2))
             msg = response.json()["msg"]
+            print(msg)
+
 
     except:
         print("Error")

@@ -3,9 +3,6 @@ import base64
 import json
 import os
 
-from messenger import Messenger
-
-
 import time
 
 headers_1 = {
@@ -42,11 +39,10 @@ headers_3 = {
 
 # 获取变量
 users_data = os.getenv("users_data")
-sckey = os.getenv("sckey")
 
 # step 1: 获取验证码Token及图片
 
-def ClockIn(user_data,messenger):
+def ClockIn(user_data):
     try:
         token_json = requests.get("https://fangkong.hnu.edu.cn/api/v1/account/getimgvcode", headers=headers_1)
 
@@ -127,20 +123,15 @@ def ClockIn(user_data,messenger):
                 }
 
             response = session.post("https://fangkong.hnu.edu.cn/api/v1/clockinlog/add", headers=headers_2, data=json.dumps(data2))
-
             msg = response.json()["msg"]
-            messenger.send(text= user_data['usr'] + msg )
+
     except:
         print("Error")
-        messenger.send(text = '打卡失败,请手动打卡!')
         ClockIn(user_data,messenger)
 
 if __name__ == '__main__':
 
-
-    messenger = Messenger(sc_key=sckey)
-
     for user_data in eval(users_data):
-        ClockIn(user_data,messenger)
+        ClockIn(user_data)
         time.sleep(2)
 

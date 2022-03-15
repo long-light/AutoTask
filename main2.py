@@ -6,39 +6,40 @@ import os
 import time
 
 headers_1 = {
-        "Cookie": "arccount62298=c; arccount62019=c",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66"
-    } # 验证码token爬取
+    "Cookie": "arccount62298=c; arccount62019=c",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36 Edg/87.0.664.66"
+}  # 验证码token爬取
 
 headers_2 = {
-        "Accept": "application/json, text/plain, */*",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
-        "Connection": "keep-alive",
-        "Content-Type": "application/json;charset=UTF-8",
-        "Host": "fangkong.hnu.edu.cn",
-        "Origin": "https://fangkong.hnu.edu.cn",
-        "Referer": "https://fangkong.hnu.edu.cn/app/",
-        "Sec-Fetch-Dest": "empty",
-        "Sec-Fetch-Mode": "cors",
-        "Sec-Fetch-Site": "same-origin",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36 Edg/87.0.664.75"
-    } # 登录及打卡
+    "Accept": "application/json, text/plain, */*",
+    "Accept-Encoding": "gzip, deflate, br",
+    "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+    "Connection": "keep-alive",
+    "Content-Type": "application/json;charset=UTF-8",
+    "Host": "fangkong.hnu.edu.cn",
+    "Origin": "https://fangkong.hnu.edu.cn",
+    "Referer": "https://fangkong.hnu.edu.cn/app/",
+    "Sec-Fetch-Dest": "empty",
+    "Sec-Fetch-Mode": "cors",
+    "Sec-Fetch-Site": "same-origin",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.141 Safari/537.36 Edg/87.0.664.75"
+}  # 登录及打卡
 
 headers_3 = {
-        'Host': 'cloud.baidu.com',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36 Edg/89.0.774.76',
-        'Accept': '*/*',
-        'Origin': 'https://cloud.baidu.com',
-        'Sec-Fetch-Site': 'same-origin',
-        'Sec-Fetch-Mode': 'cors',
-        'Sec-Fetch-Dest': 'empty',
-        'Referer': 'https://cloud.baidu.com/product/ocr/general',
-        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
-    } # 百度OCR识别验证码
+    'Host': 'cloud.baidu.com',
+    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/89.0.4389.114 Safari/537.36 Edg/89.0.774.76',
+    'Accept': '*/*',
+    'Origin': 'https://cloud.baidu.com',
+    'Sec-Fetch-Site': 'same-origin',
+    'Sec-Fetch-Mode': 'cors',
+    'Sec-Fetch-Dest': 'empty',
+    'Referer': 'https://cloud.baidu.com/product/ocr/general',
+    'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
+}  # 百度OCR识别验证码
 
 # 获取变量
 users_data = os.getenv("users_data")
+
 
 # step 1: 获取验证码Token及图片
 
@@ -46,24 +47,23 @@ def ClockIn(user_data):
     try:
         token_json = requests.get("https://fangkong.hnu.edu.cn/api/v1/account/getimgvcode", headers=headers_1)
 
-        if token_json.status_code!=200: print("Token爬取失败，正在重试")
-        while (token_json.status_code!=200):
+        if token_json.status_code != 200: print("Token爬取失败，正在重试")
+        while (token_json.status_code != 200):
             token_json = requests.get("https://fangkong.hnu.edu.cn/api/v1/account/getimgvcode", headers=headers_1)
 
         data = json.loads(token_json.text)
         token = data["data"]["Token"]
-        
+
         img_url = "https://fangkong.hnu.edu.cn/imagevcode?token=" + token
         with open("img.jpg", "wb") as img:
             img.write(requests.get(img_url).content)
 
-        
         # 解析验证码
 
-        with open("img.jpg",'rb') as f:
+        with open("img.jpg", 'rb') as f:
             img = base64.b64encode(f.read())
         data = {
-            'image': 'data:image/jpeg;base64,'+str(img)[2:-1],
+            'image': 'data:image/jpeg;base64,' + str(img)[2:-1],
             'image_url': '',
             'type': 'https://aip.baidubce.com/rest/2.0/ocr/v1/general_basic',
             'detect_direction': 'false'
@@ -82,7 +82,8 @@ def ClockIn(user_data):
         }
 
         session = requests.Session()
-        response = session.post("https://fangkong.hnu.edu.cn/api/v1/account/login", headers=headers_2, data=json.dumps(data))
+        response = session.post("https://fangkong.hnu.edu.cn/api/v1/account/login", headers=headers_2,
+                                data=json.dumps(data))
 
         if response.json()["code"] != 0:
             print("验证码错误")
@@ -118,16 +119,18 @@ def ClockIn(user_data):
                     "RealCity": "长沙市",
                     "RealCounty": "岳麓区",
                     "RealProvince": "湖南省",
-                    "QRCodeColor":"绿色",
+                    "QRCodeColor": "绿色",
                     "tripinfolist": []
                 }
 
-            response = session.post("https://fangkong.hnu.edu.cn/api/v1/clockinlog/add", headers=headers_2, data=json.dumps(data2))
+            response = session.post("https://fangkong.hnu.edu.cn/api/v1/clockinlog/add", headers=headers_2,
+                                    data=json.dumps(data2))
             msg = response.json()["msg"]
 
     except:
         print("Error")
-        ClockIn(user_data,messenger)
+        ClockIn(user_data)
+
 
 if __name__ == '__main__':
     for user_data in eval(users_data):

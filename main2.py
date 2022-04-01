@@ -115,12 +115,15 @@ def ClockIn(user_data):
                     "BackState": 1,
                     "IsInCampus": 1,
                     "IsNormalTemperature": 1,
+                    "IsUnusual": 0,
                     "MorningTemp": "36.5",
                     "NightTemp": "36.5",
                     "RealAddress": "湖南大学",
                     "RealCity": "长沙市",
                     "RealCounty": "岳麓区",
                     "RealProvince": "湖南省",
+                    "BuildingName": "德智9栋",
+                    "Parkname": "南校区",
                     "QRCodeColor": "绿色",
                     "tripinfolist": []
                 }
